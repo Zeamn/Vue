@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .classA{
+            color:red;
+        }
+        .classB{
+            color:blue;
+        }
+        .classC{
+            background-color: blueviolet;
+        }
+    </style>
+</head>
+<body>
+    <h1>class与style的绑定</h1>
+    <hr />
+    操作元素的 class 列表和内联样式是数据绑定的一个常见需求。
+    因为它们都是属性，所以我们可以用 v-bind 处理它们：
+    只需要通过表达式计算出字符串结果即可。
+    不过，字符串拼接麻烦且易错。因此，在将 v-bind 用于 class 和 style 时，
+    Vue.js 做了专门的增强。表达式结果的类型除了字符串之外，
+    还可以是对象或数组。
+    <div id="app">
+        <!-- 绑定HTML Class -->
+        <!-- 对象语法__根据条件切换列表中的 class -->
+        <div :class="className">1.可以直接绑定class样式</div>
+         <!-- 
+            data:{
+               className:'classA'
+            } 
+        -->
+        <div :class="{classB:isTrue}">2.可以使用对象绑定class样式</div>
+         <!-- 
+            data:{
+                isTrue:true
+            } 
+        -->
+        <div :class="{classB:isTrue,classC:isActive}">3.可以使用对象绑定2个class样式</div>
+         <!-- 
+            data:{
+                isTrue:true,
+                isActive:true
+            } 
+        -->
+        <div :class="classObject">4.可以把对象整体放到Vue构造器的data里</div>
+         <!-- 
+            data:{
+                classObject:{
+                    classB:true,
+                    classC:true
+                }
+            } 
+        -->
+        <!-- 数组语法__根据值切换列表中的 class -->
+        <div :class="[activeClass,errorClass]">1.可以使用数组绑定class样式,在data里找对应的值</div>
+        <!-- 
+            data:{
+                activeClass:'classA',
+                errorClass:'classB'
+            } 
+        -->
+        <div :class="[isActive ? activeClass : errorClass]">2.数组三元表达式绑定class样式,在data里找对应的值</div>
+        <!-- 
+            data:{
+               isActive:true
+            } 
+        -->
+
+        <div :class="[{activeClass:isActive},errorClass]">3.或者改写2为数组中内嵌对象</div>
+        <!-- 
+            data:{
+               isActive:true,
+               errorClass:'classB'
+            } 
+        -->
+
+
+
+
+
+        <!-- 绑定内联样式 同上-->
+        <div :style="{color:activeColor}">可以使用对象绑定style样式</div>
+        <!-- 
+            data:{
+                activeColor:'red'
+            } 
+        -->
+        <div :style="styleObject">直接绑定到一个样式对象</div>
+        <!-- 
+            data:{
+                styleObject:{
+                    color:'red',
+                    fontSize:'14px'
+                }
+            } 
+        -->
+        <div v-bind:style="[baseStyles, overridingStyles]">将多个样式对象应用到同一个元素上</div>
+         <!-- 
+            data:{
+                baseStyles:{
+                    color:'red',
+                    fontSize:'14px'
+                },
+                overridingStyles:{
+                    color:'blue',
+                    fontSize:'18px'
+                }
+            } 
+        -->
+    </div>
+</body>
+</html>
+<script src="../assets/vue.js"></script>
+<script>
+    var app = new Vue({
+        el:'#app',
+        data:{}
+    })
+</script>
+
