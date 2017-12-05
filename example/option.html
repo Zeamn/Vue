@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        {{age}}
+        <header_a></header_a>
+        <button @click="cl">add</button>点击按钮改变age的值时会被watch监控到
+        <button @click="add">add</button>
+    </div>
+    
+    <hr />
+
+    <div id="app2">
+        {{age}}
+        <button @click="cl">add</button>点击按钮改变age的值时会被watch监控到
+    </div>
+    
+</body>
+</html>
+<script src="../assets/vue.js"></script>
+<script>
+    // 一. props选项 子父传参的桥梁
+
+    var header_a = Vue.extend({
+        template:`<p>{{message}}--{{a}}</p>`,
+        data:function(){
+            return{
+                message:'你好世界'
+            }
+        },
+        props:['a']
+    });
+    // 1.用全局扩展的方式作自定义标签(不推荐)
+    // 作用：既可以通过extend预设选项传值，也可以在实例化时使用propsData传
+    // new header_a({propsData:{a:'我是挂载时传入的参数'}}).$mount('header_a')
+    // 2.改用组件,模版部分使用extend来创建，才可以预设选项如字段message，
+    // 如果模版使用普通对象时也会自动调用extend,两者无差别
+
+
+    // 二. computed 计算选项--对原数据进行改造输出
+    // 三. methods 方法选项--可以在html传入参数
+    // 四. watch 监控数据选项--写在外部无差别,解耦，灵活
+    // app.$watch('age',function(newVal,oldVal){
+    //     console.log(newVal,oldVal)
+    // })
+    // 五. mixins 混入选项--通过在外部增加对象
+    // 1、在你已经写好了构造器后，需要增加方法或者临时的活动时使用的方法，这时用混入会减少源代码的污染。
+    // 2、很多地方都会用到的公用方法，用混入的方法可以减少代码量，实现代码重用。
+    // 比如需要增加一个临时的功能，每次更新数组都会打印一次
+    // 六. extends 扩展选项--通过在外部增加对象的形式对Vue构造器进行扩展
+    // mixins和extends非常类似,区别是:mixins是数组, 而extends是一个对象
+        // 例如
+        var bbb={
+            created:function(){
+                console.log("我是被扩展出来的");
+            },
+            methods:{
+                add:function(){
+                    console.log('我是被扩展出来的方法！');
+                }
+            }
+        };
+    // 全局mixin---所有VUE作用域中都有效,且先执行
+    Vue.mixin({
+        //updated踩坑--只对视图中数据的改变有效
+        updated:function(){
+            console.log('数据更新了');
+        }
+    })
+
+
+    
+    var app = new Vue({
+        el:'#app',
+        data:{
+            age:23
+        },
+        components:{
+            "header_a":header_a
+        },
+        computed:{
+            newAge:function(){
+                return this.age+'岁'
+            }
+        },
+        methods:{
+            cl:function(){
+                this.age++;
+            }
+        },
+        watch:{
+            age:function(newVal,oldVal){
+                console.log(newVal,oldVal);
+            }
+        },
+        created:function(){
+            console.log('我是原生构造器中的')
+        },
+        mixins:[bbb],
+        extends:bbb
+    })
+
+    var app2 = new Vue({
+        el:'#app2',
+        data:{
+            age:23
+        },
+        methods:{
+            cl:function(){
+                this.age++;
+            }
+        }
+    });
+    
+</script>
