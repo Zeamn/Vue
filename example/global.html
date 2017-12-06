@@ -1,0 +1,202 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="app">
+			<input type="text" v-focus  />
+			<p v-ys="color">改变字体颜色</p>
+			<tem></tem>
+			
+			在外部改变数组数据
+			<ul>
+				<li v-for="item in arr">{{item}}</li>
+			</ul>
+			<qjhww></qjhww>
+		</div>
+		
+		
+		
+		<hr  />
+		
+		
+		
+		<div id="app2">
+			<p>测试</p>
+		</div>
+		
+		<hr  />
+		
+		<div id="app3">
+			<hww></hww>
+			<qjhww></qjhww>
+		</div>
+		
+		
+		<hr  />
+		
+		<div id="app4">
+			<prop-hww :push="message"></prop-hww>
+			<component is="qjhww2"></component>
+		</div>
+		
+		
+		
+		
+		
+		
+		
+		
+		<template id="tem2">
+			<h1>我是template模版</h1>
+		</template>
+	</body>
+</html>
+<script type="text/javascript" src="../assets/vue.js" ></script>
+<script>
+//	一.1.自定义指令focus,加载网页自动获取焦点
+	Vue.directive('focus',{
+		inserted:function(el,binding){
+			el.focus();
+		}
+	})
+//     2.自定义指令ys,改变该元素的字体颜色
+	Vue.directive('ys',{
+		inserted:function(el,binding){
+			console.log(binding)
+			el.style.color = binding.value; 
+		}
+	})
+
+//	二 extend扩展实例构造器
+//  将该模版挂在到指定的元素上面，
+//	如果html出现该元素则会自动调用扩展实例构造器来生产组件实例，
+//	并自动挂载到该元素上
+	var customLabel =  Vue.extend({
+		template:`<p>{{message}}</p>`,
+		data:function(){
+			return {
+				message:'我是扩展实例构造器生成的'
+			}
+		}
+	})
+	//将扩展实例构造器挂载到指定的标签
+	new customLabel().$mount('tem');
+	
+//	
+	
+	
+	var app = new Vue({
+		el:'#app',
+		data:{
+			color:'red',
+			arr:['aaa','bbb','ccc']
+		}
+	});
+	
+	
+	
+//	三 Vue.set 的作用是在构造器Vue的外面操作构造器内部的数据(有三种方法)
+//	1.在外面用变量引用构造器里面data对象的值
+//	var outData = {
+//		arr:['aaa','bbb','ccc']
+//	}
+//	outData.arr[0] = ''
+//	2.用实例去访问其属性改变,数组改变成功但界面不会自动更新
+	app.arr[0] = 'qqq';
+	console.log(app.arr);
+//	3.用Vue.set去访问改变，数组改变成功界面也会更新
+	Vue.set(app.arr,0,'www');
+
+
+
+//	四 Template模版的三种写法,还有一种单文件组件的写法
+//	1.直接在构造器里的template选项编写
+	var app2 = new Vue({
+		el:'#app2',
+		data:{},
+		template:'#tem2'
+//		template:`<h1>我是选项模版</h1>`
+	});
+//	2.写在html的<template>标签里,然后Vue的选项模版templata通过id引用
+//	3.写在<script>标签里，可以通过src引用外部的文件,注意要加上type="text/x-template"
+//	<script type="text/x-template">
+//		<h1>我是script模版</h1>
+//	<//script>
+
+//	五 全局组件和局部组件
+//	2.全局组件，写在构造器的外部,必须在实例Vue实例创建之前创建，否则报错
+//	构造Vue实例时传入的选项属性在组件也可以使用，但data必须是一个函数，通过返回对象实现
+	Vue.component('qjhww1',{
+		template:`<div>全局注册的qjhww1组件</div>`,
+		data:function(){
+			return {
+				
+			}
+		}
+	})
+	Vue.component('qjhww2',{
+		template:`<div>全局注册的qjhww2组件</div>`,
+		data:function(){
+			return {
+				
+			}
+		}
+	})
+	Vue.component('qjhww3',{
+		template:`<div>全局注册的qjhww3组件</div>`,
+		data:function(){
+			return {
+				
+			}
+		}
+	})
+//	1.局部组件,写在vue构造器里的component选项里
+	var app3 = new Vue({
+		el:'#app3',
+		data:{},
+		components:{
+			"hww":{
+				template:`<div>局部注册的hww组件</div>`
+			}
+		}
+	})
+
+
+//	六 父组件给子组件传参 props
+// 把局部组件的模版放到构造器外部
+var propHww = {
+				template:`<div>我是父组件传来的参数--{{push}}</div>`,
+				props:['push']
+			}
+
+var app4 = new Vue({
+		el:'#app4',
+		data:{
+			message:'我很好世界'
+		},
+		components:{
+			"prop-hww":propHww
+		}
+//		components:{
+//			"prop-hww":{
+//				template:`<div>我是父组件传来的参数--{{push}}</div>`,
+//				props:['push']
+//			}
+//		}
+	})
+
+//	七 component标签 它的用途就是可以动态绑定我们的组件，根据数据的不同更换不同的组件。
+//  <component is="组件名"></component>
+
+
+
+
+
+
+
+
+
+</script>
