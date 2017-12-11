@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h1>v-指令</h1>
+    <hr />
+    <div id="app">
+        <!-- v-if&v-else -->
+        <div v-if="isLogin">欢迎您</div>
+        <div v-else>请登录</div>
+        <!-- v-show -->
+        <div v-show="isLogin">能看见我</div>
+        <!-- 
+            v-if和v-show的区别:
+                1.v-if是控制元素的插入和删除来实现切换的，
+                  如果初始渲染时条件为假，则不加载（不编译)，变为真时
+                  才开始局部编译.
+                2.v-show不管条件真假都会加载（编译），只是利用CSS的display属性来实现
+                  元素切换
+                so. 如果需要频繁切换则使用v-show，运行时切换较少则用v-if来实现元素的切换
+        
+        -->
+
+
+        <!-- v-for循环 -->
+        <ul>
+            <li v-for="item in arr1">{{item}}</li>
+        </ul>
+        <ul>
+            <li v-for="item in arr2">{{item.name}}</li>
+        </ul>
+
+        <!-- v-text&v-html -->
+        <!-- 为了防止js出错导致屏幕输出{{message}}，可以使用v-text代替文本插入 -->
+        <div v-text="message"></div>
+        <!-- 为了在文本输入html，可以使用v-html. -->
+        <div v-html="message2"></div>
+
+        <!-- v-on 绑定事件监听器 -->
+        <div v-on:click="cl">点击我触发单击事件</div>
+        <!-- 简写 -->
+        <div @click="cl">@click简写</div>
+
+        <!-- v-model 双向数据绑定 -->
+        <p>{{vmodel}}(自动响应input更新后的值)</p>
+        <input type="text" v-model="vmodel" />
+        
+        <!-- mustache语法只能文本插值,要绑定元素属性则使用v-bind:属性名 -->
+        <div v-bind:title="message">该div的title属性被绑定</div>
+        <!-- 简写 -->
+        <div :title="message">:title简写方式</div>
+
+        <!-- v-once 执行一次性地插值，当数据改变时，插值处的内容不会更新 -->
+        <div v-once>{{message}} 之后不在响应message字段的更新</div>
+
+        <!-- v-pre指令 -->
+        <div v-pre>{{message}}</div>
+        这时并不会输出我们的message值，而是直接在网页中显示{{message}}<br />
+
+
+        <!-- 指令事件的修饰符,在事件后面用(.修饰符) -->
+        <input type="text" v-on:click.prevent="cl" value="使用了修饰符，阻止默认操作" /><br />
+
+        <input type="text" v-model.trim="vmodel" />双向数据绑定修饰符,去掉首位空格<br />
+        <!-- v-model 多选框的双向数据绑定 -->
+        <!-- 多选框绑定一个数组时，选中则将其value加入绑定的数组 -->
+        <input type="checkbox" value="小红" v-model="arrAll" />
+        <input type="checkbox" value="小明" v-model="arrAll" />
+        <input type="checkbox" value="小白" v-model="arrAll" />
+        <p>{{arrAll}}</p>
+        <!-- v-model 单选框的双向数据绑定 -->
+        <!-- 单选框被选中，则将其value值更新至绑定的字段 -->
+        <input type="radio" value="男" v-model="sex" />男
+        <input type="radio" value="女" v-model="sex" />女
+        <p>{{sex}}</p>
+    </div>
+</body>
+</html>
+
+<script src="../assets/vue.js"></script>
+<script>
+    var app = new Vue({
+        el:'#app',
+        data:{
+            sex:'男',
+            arrAll:[],
+            message:'<b>你好世界</b>',
+            message2:'<b>你好世界</b>',
+            vmodel:'',
+            isLogin:true,
+            arr1:[5,2,4,6,2],
+            arr2:[
+                {name:'小红'},
+                {name:'米国'},
+                {name:'领导'},
+                {name:'考生'}
+            ]
+        },
+        methods:{
+            cl:function(){
+                alert('触发点击事件');
+            }
+        }
+    })
+</script>
